@@ -1,0 +1,19 @@
+pluginManagement {
+    repositories {
+        // Always prefer a local published version
+        mavenLocal()
+
+        nexus3PluginRepos.split().each { repo ->
+            maven { url(nexus3BaseUrl + repo) }
+        }
+        nexus3BuildRepos.split().each { repo ->
+            maven { url(nexus3BaseUrl + repo) }
+        }
+
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'rum-cordova-plugin'
+// This test allows us to build component-test from the current directory
+include 'test:component-test'

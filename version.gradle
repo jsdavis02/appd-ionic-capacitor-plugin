@@ -1,0 +1,8 @@
+// Plugin base version number
+ext.baseVersion = '21.5.0'
+
+// Default iOS Agent version to pull from Nexus
+ext.iOSAgentVersion = '2021.5.0.2462'
+
+// Default Android Agent version to pull from Nexus
+ext.androidAgentVersion = '21.5.0'

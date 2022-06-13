@@ -1,0 +1,6 @@
+cordova_versions:
+  - 10.0.0
+node_versions:
+  - 16.0.0
+npm_versions:
+  - 5.4.0

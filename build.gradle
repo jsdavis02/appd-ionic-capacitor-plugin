@@ -1,0 +1,612 @@
+/*
+ * Cordova Support Project
+ *
+ */
+
+
+plugins {
+    id 'java-library'
+    id 'com.appdynamics.gradle.plugins.appd-publish' version '2.2.22'
+//    id 'com.eriwen.gradle.js' version '2.14.1'
+    id "com.github.node-gradle.node" version "3.3.0"
+//    id 'distribution'
+}
+
+ subprojects {
+    buildscript {
+        repositories {
+            nexus3PluginRepos.split().each { repo ->
+                maven {url(nexus3BaseUrl + repo)}
+            }
+        }
+        dependencies {
+            classpath group: 'com.appdynamics.plugins', name: 'publish-plugin', version: '7.0.88'
+        }
+    }
+
+    repositories {
+        nexus3BuildRepos.split().each { repo ->
+            maven {url(nexus3BaseUrl + repo)}
+        }
+        nexusMavenRepos.split().each { repo ->
+            maven { url(localNexusBaseUrl + repo) }
+        }
+    }
+}
+
+apply from: 'version.gradle'
+
+repositories {
+    nexus3PluginRepos.split().each { repo ->
+        maven { url(nexus3BaseUrl + repo) }
+    }
+    nexus3BuildRepos.split().each { repo ->
+        maven { url(nexus3BaseUrl + repo) }
+    }
+    nexusMavenRepos.split().each { repo ->
+        maven { url(nexusBaseUrl + repo) }
+    }
+    nexusBuildRepos.split().each { repo ->
+        maven { url(nexusBaseUrl + repo) }
+    }
+}
+
+configurations {
+    iOSAgent {
+        dependencies {
+            iOSAgent group: 'com.appdynamics.eum', name: 'mobile-ios', version: iOSAgentVersion
+        }
+    }
+}
+
+def gitDescribe = {
+    new ByteArrayOutputStream().withStream { out ->
+        def result = exec {
+            commandLine 'git', 'describe',
+            '--match', 'v[0-9]*', '--dirty', '--always'
+            standardOutput = out
+        }
+        return out.toString().trim() ?: "v2"
+    }
+}
+def gitCommit = getEnvVariableOrDefault('GIT_COMMIT', gitDescribe())
+
+// Some useful names
+def pluginVersion = baseVersion
+def RumCordovaPlugin = 'rum-cordova-plugin'
+def RumCordovaPluginVersion = "$RumCordovaPlugin-$pluginVersion"
+def RCPZip = "${RumCordovaPlugin}" + ".zip"
+
+def iOSFramework = "ADEUMInstrumentation.framework"
+def iOSAgentNexus = "iOSAgent-" + "${iOSAgentVersion}/"
+
+
+group = "com.appdynamics.eum"
+
+// Directories
+def thisDir = file('.')
+def distDir = new File(thisDir, "dist")
+def releaseDir = new File(distDir, "$RumCordovaPluginVersion")
+def testDir = new File(thisDir, "android/src/androidTest")
+def buildDir = new File(thisDir, 'build')
+def templatePluginDir = new File(thisDir, 'plugin-template')
+def ionicPluginDir = new File(thisDir, 'plugin')
+
+def iOSAgentSourceDir = new File(thisDir, 'plugin/src/ios')
+def JSPluginSource = new File(thisDir, 'plugin/www/ADEUMMobilePlugin.js')
+def jsDocsOutput = new File(buildDir, "jsDocStaging")
+def iOSPluginDir = new File(releaseDir, '/ios/')
+def androidPluginDir = new File(releaseDir, '/android/main/java/com/appdynamics/')
+
+allprojects {
+
+}
+
+task setBuildVersion() {
+   doLast() {
+       println "##teamcity[buildNumber '${baseVersion}.{build.number}']"
+   }
+}
+
+/*
+ * Setup tasks
+ */
+task prepareDirectories {
+    outputs.upToDateWhen {
+        return buildDir.exists() &&
+            distDir.exists() &&
+            releaseDir.exists()
+    }
+    doLast {
+        buildDir.mkdirs()
+        distDir.mkdirs()
+        releaseDir.mkdirs()
+    }
+}
+
+/*
+ * Clean tasks
+ */
+task deleteOutputDirs {
+    description 'Deletes output directories'
+    doLast {
+        delete distDir
+        delete buildDir
+    }
+}
+
+clean.dependsOn 'deleteOutputDirs'
+
+/*
+ * Assemble tasks
+ */
+task assembleCordovaPlugin {
+    description 'Collects files required for Cordova plugin'
+
+    dependsOn 'prepareDirectories'
+    dependsOn 'acquireiOSAgent'
+
+    doLast {
+        copy {
+            from templatePluginDir
+            into releaseDir
+        }
+    }
+}
+
+task acquireiOSAgent  {
+    description 'Pulls iOS Agent framework from Nexus and places in buildDir'
+    description 'Version specified in version.gradle'
+
+    dependsOn 'prepareDirectories'
+
+    def iOSAgentSource = new File(iOSAgentSourceDir, iOSFramework)
+
+    doLast {
+        // Only install iOSAgent if needed
+        if( !iOSAgentSource.exists() ) {
+            mkdir(buildDir)
+
+            configurations.iOSAgent.resolvedConfiguration.resolvedArtifacts.each {
+                artifact -> artifact.file
+
+                def file = artifact.getFile()
+
+                exec {
+                    workingDir buildDir
+                    commandLine 'unzip', '-o', file
+                }
+            }
+        }
+    }
+}
+
+task iOSAgentUnpack  {
+    description 'Copy framework to distDir'
+
+    dependsOn 'prepareDirectories'
+    dependsOn 'acquireiOSAgent'
+
+    // the iOS agent zip file contains 3 number version format - yyyy.mm.h
+    if (iOSAgentNexus.count(".") == 3) {
+       iOSAgentNexus = iOSAgentNexus.substring(0, iOSAgentNexus.lastIndexOf('.'))
+    }
+
+    def iOSAgentBuild = new File(buildDir, iOSAgentNexus)
+    def binary = new File(iOSAgentBuild,  "${iOSFramework}/Versions/A")
+    def iosLoc = new File(iOSPluginDir,"${iOSFramework}")
+
+    doLast {
+        copy {
+            from iOSAgentBuild
+            into iOSPluginDir
+            include "${iOSFramework}/Info.plist"
+            include "${iOSFramework}/Headers/**"
+            include "${iOSFramework}/Modules/**"
+            include "${iOSFramework}/Resources/**"
+        }
+
+        copy {
+            from binary
+            into iosLoc
+            include "ADEUMInstrumentation"
+        }
+    }
+}
+
+task setPluginVersion(type: NodeTask) {
+    script = file('scripts/set-plugin-version.js')
+    args = [
+        releaseDir.getCanonicalPath(),
+        pluginVersion
+    ]
+}
+
+task installPlugin  {
+    description 'Unzip distDir plugin proceeds into Ionic plugin directory'
+
+    dependsOn 'prepareDirectories'
+    dependsOn 'assemble'
+
+    doLast {
+        copy {
+            from(releaseDir) {
+                RCPZip
+            }
+            into ionicPluginDir
+        }
+    }
+
+    doLast {
+        configurations.iOSAgent.resolvedConfiguration.resolvedArtifacts.each {
+            artifact -> artifact.file
+
+                def file = artifact.getFile()
+
+                exec {
+                    workingDir buildDir
+                    commandLine 'unzip', '-o', file
+                }
+            }
+    }
+}
+
+task copyLicenseFileToReleaseDirectory(type: Copy) {
+    description 'Copies LICENSE file into the release directory'
+    dependsOn 'prepareDirectories'
+    from file('LICENSE.txt')
+    into releaseDir
+    rename { 'LICENSE' }
+
+    doLast {
+        assertFileExists(releaseDir, 'LICENSE')
+    }
+}
+
+task zipReleaseArtifacts {
+    // Gradles zip task does not support symlinks
+    // so we have to call exec directly
+    dependsOn 'prepareDirectories'
+    dependsOn 'copyLicenseFileToReleaseDirectory'
+    dependsOn 'assembleCordovaPlugin'
+
+    inputs.dir releaseDir
+    outputs.file "${distDir.name}/" + RCPZip
+
+    doLast {
+        exec {
+            //for cordova plugin
+            workingDir distDir
+            commandLine 'zip', '--recurse-paths', '--symlinks', '--quiet',
+            RCPZip, releaseDir.name
+        }
+    }
+}
+
+def removeCoreSimulatorService = {
+    exec {
+        ignoreExitValue true
+        commandLine 'launchctl', 'remove', 'com.apple.CoreSimulator.CoreSimulatorService'
+    }
+}
+
+def killAllSimulators = {
+    exec {
+        ignoreExitValue true
+        // extreme, but reliable
+        commandLine 'killall', 'Simulator'
+    }
+}
+
+task shutDownSimulator {
+    doLast { removeCoreSimulatorService() }
+    doLast { killAllSimulators() }
+}
+
+task runAndroidComponentTests {
+    doLast {
+        exec {
+            workingDir testDir
+            commandLine "bash", "component-test-android.sh"
+        }
+    }
+}
+
+task runiOSComponentTests {
+    dependsOn 'installPlugin'
+
+    doLast {  
+        exec {  
+            workingDir testDir
+            commandLine "bash", "component-test-ios.sh"
+        }
+    }
+}
+runiOSComponentTests.finalizedBy shutDownSimulator
+
+task generateiOSPluginVersionFile {
+    description 'Generates the iOS PluginVersion.h file'
+    dependsOn 'prepareDirectories'
+    def versionFile = new File(iOSPluginDir, 'ADEUMPluginVersion.h')
+
+    inputs.property("gitCommit", gitCommit)
+    inputs.property("releaseVersion", pluginVersion)
+    outputs.file versionFile
+
+    doLast {
+        versionFile.text = """
+#import <Foundation/Foundation.h>
+NSString *const ADEumPluginCommit = @"$gitCommit";
+NSString *const ADEumPluginHybridAgentType = @"Cordova";
+NSString *const ADEumPluginHybridAgentVersion = @"$pluginVersion";
+"""
+    }
+}
+
+task generateAndroidPluginVersionFile {
+    description 'Generates Android PluginVersion.java file'
+    dependsOn 'prepareDirectories'
+    def versionFile = new File(androidPluginDir, 'ADEUMPluginVersion.java')
+
+    inputs.property("gitCommit", gitCommit)
+    inputs.property("releaseVersion", pluginVersion)
+    outputs.file versionFile
+
+    doLast {
+        versionFile.text = """
+public static final String ADEumPluginCommit = @"$gitCommit";
+public static final String ADEumPluginVersion = @"$pluginVersion";
+"""
+    }
+}
+
+assemble.dependsOn 'generateiOSPluginVersionFile'
+assemble.dependsOn 'generateAndroidPluginVersionFile'
+assemble.dependsOn 'assembleCordovaPlugin'
+assemble.dependsOn 'setPluginVersion'
+assemble.dependsOn 'acquireiOSAgent'
+assemble.dependsOn 'iOSAgentUnpack'
+assemble.dependsOn 'zipReleaseArtifacts'
+assemble.dependsOn 'copyReleaseArtifactsToBuildDirectory'
+//assemble.dependsOn 'zipJSDocs'
+
+build.dependsOn 'assemble'
+
+/*
+ * Artifact setup for Nexus publish
+ */
+artifacts {
+  archives file: project.file("${distDir.name}/$RumCordovaPlugin" + ".zip"),
+    name: "$RumCordovaPlugin",
+    type: 'zip'
+}
+
+/*
+ * Build JSDocs
+ */
+/*
+task buildJSDocs(type: com.eriwen.gradle.js.tasks.JsDocTask) {
+
+    description 'Build jsdocs with npm jsdoc utility'
+
+    source = ["${JSPluginSource}"]
+    destinationDir = jsDocsOutput
+}
+
+
+
+task zipJSDocs(type: Zip) {
+    dependsOn 'buildJSDocs'
+    from jsDocsOutput
+    destinationDir distDir
+    baseName 'jsdocs'
+    extension 'zip'
+    entryCompression ZipEntryCompression.STORED
+}
+
+ */
+
+task verifyDistDir {
+    description 'Verifies base plugin files'
+
+    doLast {
+        assertFileExists(distDir, "$RumCordovaPluginVersion")
+        assertFileExists(distDir, RCPZip)
+        assertFileExists(releaseDir, 'LICENSE')
+        assertFileExists(releaseDir, 'package.json')
+        assertFileExists(releaseDir, 'plugin.xml')
+    }
+}
+
+task verifyiOS {
+    description 'Verifies iOS specific plugin files'
+
+    doLast() {
+    	    assertFileExists(iOSPluginDir, 'ADEUMPluginVersion.m')
+            assertFileExists(iOSPluginDir, 'ADEUMMobilePlugin.m')
+            assertFileExists(iOSPluginDir, 'ADEUMMobilePlugin.h')
+            assertFileExists(iOSPluginDir, "${iOSFramework}/ADEUMInstrumentation")
+    }
+}
+
+/*
+ * Misc Utilities
+ */
+def assertFileExists(File root, String path) {
+    File theFile = new File(root, path)
+    if (!theFile.exists()) {
+        throw new GradleException("Assert failed: file does not exist: " + theFile.absolutePath)
+    }
+}
+
+def getEnvVariableOrDefault(String envVarName, defaultValue) {
+    return System.getenv(envVarName) ?: defaultValue
+    /*if (System.env[envVarName] != null) {
+        return System.env[envVarName]
+    } else {
+        String val
+        if (defaultValue instanceof Closure) {
+            val = defaultValue()
+        } else {
+            val = defaultValue
+        }
+        println "** WARNING ** environment variable '${envVarName}' not set, defaulting to: '${val}'"
+        return val
+    }
+
+     */
+}
+
+def copyAndRename(fromFile, toDir, toName) {
+    copy {
+        from fromFile
+        into toDir
+        rename { toName }
+    }
+}
+/**
+ * This gradle task performs the source clear scan and returns the standard console output to file
+ */
+
+task runSourceClear() {
+    doLast {
+        exec {
+            def srcClrCommand = ['srcclr', 'scan', '--allow-dirty', '--json', 'ef-cordova']
+            environment(System.getenv())
+            commandLine srcClrCommand
+            ext.sourceclearoutput = {
+                standardOutput.toString()
+            }
+        }
+    }
+}
+
+/**
+ * This task calls the clean and source clear task and then uploads the scan out from file to theadfix
+ */
+task runSourceClearAndUploadToThreadfix(dependsOn: ['clean', 'runSourceClear']) {
+
+    def result = file("${buildDir}/srcclr-scan-output.json")
+    outputs.file result
+    doLast {
+        if (!buildDir.exists()) {
+            buildDir.mkdirs()
+        }
+        def output = tasks.runSourceClear.sourceclearoutput()
+        result.write(output)
+        exec {
+            def defApiKey = System.getenv('THREADFIX_API_KEY')
+            commandLine 'curl', '-H', '\'Accept: application/json\'', '--form', "file=@${buildDir}/srcclr-scan-output.json", '-X', 'POST', "https://sec-threadfix.ops.appdynamics.com/threadfix/rest/v2.5/applications/15/upload?apiKey=${defApiKey}"
+
+        }
+    }
+}
+
+task installTypescript(type: NpmTask) {
+  args = ['install', 'typescript', '-g']
+}
+
+node {
+    version = '12.16.1'
+    download = true
+    workDir = file("${project.projectDir}/node")
+    distBaseUrl = 'https://nexus3.corp.appdynamics.com/repository/nodejs-proxy/'
+}
+
+/*
+project.tasks["sonarqube"].dependsOn([nodeSetup, "installTypescript"])
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "EUM Cordova Plugin"
+        property "sonar.projectVersion", pluginVersion
+        property "sonar.verbose", "false"
+
+        property "sonar.sources", ["plugin-template/www", "plugin-template/src", "ef-cordova/src"]
+
+        property "sonar.test.inclusions", "**
+        /*Test*"
+        property "sonar.exclusions", "**
+        /*Test*"
+        
+        property "sonar.c.file.suffixes", "-"
+        property "sonar.cpp.file.suffixes", "-"
+        property "sonar.objc.file.suffixes", "-"
+
+        property "sonar.cfamily.build-wrapper-output.bypass", "true"
+        property "sonar.typescript.node", node.variant.nodeExec
+    }
+}
+*/
+
+project(":test:component-test") {
+
+}
+
+appdVersion {
+    baseVersion = '21.5.0'
+}
+
+task display() {
+    doLast {
+        println "Project Group: " + project.group.toString()
+        println "Project Name: " + project.name.toString()
+        println "Dist Path: " + project.getProjectDir() + "/dist"
+    }
+}
+
+def zipFile = file("$buildDir/distributions/${project.name}-${project.version}.zip")
+def zipArtifact = artifacts.add('archives', zipFile) {
+    type 'zip'
+    builtBy 'zipReleaseArtifacts'
+}
+
+//required for pipelib
+task copyReleaseArtifactsToBuildDirectory (type: Copy) {
+  dependsOn 'zipReleaseArtifacts'
+  from "$distDir.name/$RCPZip"
+  into "$buildDir/distributions"
+  rename { "${project.name}-${project.version}.zip" } 
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact zipArtifact
+        }
+    }
+}
+
+project.afterEvaluate {
+//    project.tasks.publishMavenJavaPublicationToMavenRepository.enabled = false
+}
+
+publish.dependsOn(build)
+
+// pipelinePlugin
+//pipeline {
+//    teamcityParent = "EUM"
+//    projectName = "EUM_CordovaPlugin"
+//
+//    buildTasks = ["build", "runCordovaFrameworkDependencyScripts", "nodeDependencyTests"]
+//}
+
+task runCordovaFrameworkDependencyScripts(type: Exec) {
+    commandLine "make", "check_cordova_framework_compatibility"
+}
+
+task nodeDependencyTests(type: Exec) {
+    commandLine "make", "check_node_compatibility"
+}
+
+task npmDependencyTests(type: Exec) {
+    commandLine "make", "check_npm_compatibility"
+}
+
+task runAndroidSanitySuiteTests(type: Exec) {
+    commandLine "make", "run-android-sanity-suite-tests"
+}
+
+task runIOSSanitySuiteTests(type: Exec) {
+    commandLine "make", "run-ios-sanity-suite-tests"
+}

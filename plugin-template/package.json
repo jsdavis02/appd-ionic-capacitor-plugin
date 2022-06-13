@@ -1,0 +1,13 @@
+{
+  "name": "appd-plugin-eum-mobile",
+  "version": "21.5.0",
+  "cordova": {
+    "id": "appd-plugin-eum-mobile",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "description": "AppDynamics mobile agent plugin",
+  "license" : "SEE LICENSE IN LICENSE"
+}
