@@ -38,7 +38,13 @@ import Capacitor
         ADEumInstrumentation.removeUserData(key)
     }
     @objc public func takeScreenshot() -> Void {
-        debugPrint(ADEumInstrumentation.takeScreenshot())
+        ADEumInstrumentation.takeScreenshot()
+    }
+    @objc public func reportError(error: String, severity: ADEumErrorSeverityLevel, withStack: Bool, errorCode: Int, errorDomain: String) -> Void {
+        
+        let e = NSError(domain: errorDomain, code: errorCode, userInfo: [NSLocalizedDescriptionKey : error])
+        
+        ADEumInstrumentation.reportError(e, withSeverity: severity, andStackTrace: withStack)
     }
     /*
      * For the plugin I do not think any ios centric beginCall makes sense

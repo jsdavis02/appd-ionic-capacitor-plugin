@@ -1,5 +1,11 @@
 /// <reference types="@capacitor/cli" />
+export enum errorSeverityLevel {
+  errorLevelInfo = 0,
+  errorLevelWarn,
+  errorLevelCritical
+};
 export interface ADEUMMobileCapacitorPluginPlugin {
+  
   echo(options: { value: string }): Promise<{ value: string }>;
   startTimer(options: { name: string }): Promise<void>;
   stopTimer(options: { name: string }): Promise<void>; 
@@ -7,6 +13,13 @@ export interface ADEUMMobileCapacitorPluginPlugin {
   leaveBreadcrumb(options: { name: string }): Promise<void>; 
   setUserData(options: { key: string; value: string }): Promise<void>; 
   removeUserData(options: { key: string }): Promise<void>; 
+  reportError(options: {
+    error: string,
+    errorDomain: string,
+    errorCode: bigint,
+    errorStack: boolean,
+    errorSeverity: errorSeverityLevel
+  }): Promise<void>;
   beginCall(options: {
     className: string;
     methodName: string;

@@ -66,6 +66,10 @@ public class ADEUMMobileCapacitorPluginPlugin: CAPPlugin {
         implementation.takeScreenshot()
         call.resolve()
     }
+    @objc func reportError(_ call: CAPPluginCall){
+        let severity = call.getInt("errorSeverity", 0)
+        let sev_level = ADEumErrorSeverityLevel(rawValue: UInt(severity))
+    }
     @objc func beginCall(_ call: CAPPluginCall) {
         let className = call.getString("className") ?? nil
         let methodName = call.getString("methodName") ?? nil
@@ -281,5 +285,6 @@ public class ADEUMMobileCapacitorPluginPlugin: CAPPlugin {
             config.interactionCaptureMode = ADEumInteractionCaptureMode.init(rawValue: captureMode)
         }
         implementation.pluginInitialize(config: config)
+        debugPrint("AppD Load Finished")
     }
 }
