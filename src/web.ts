@@ -1,7 +1,7 @@
 import { WebPlugin } from '@capacitor/core';
 import { v4 as uuid } from 'uuid';
 
-import type { ADEUMMobileCapacitorPluginPlugin } from './definitions';
+import type { ADEUMMobileCapacitorPluginPlugin, errorSeverityLevel } from './definitions';
 
 export class ADEUMMobileCapacitorPluginWeb
   extends WebPlugin
@@ -40,6 +40,11 @@ export class ADEUMMobileCapacitorPluginWeb
   async removeUserData(options: { key: string }): Promise<void> {
     console.log('removeUserData', options);
     return;
+  }
+
+  async reportError(options: { error: string; errorDomain: string; errorCode: bigint; errorStack: boolean; errorSeverity: errorSeverityLevel; }): Promise<void> {
+      console.log('reportError', options);
+      return;
   }
 
   async beginCall(options: {

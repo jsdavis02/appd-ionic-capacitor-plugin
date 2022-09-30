@@ -38,6 +38,7 @@ apply plugin: 'adeum'
 * [`leaveBreadcrumb(...)`](#leavebreadcrumb)
 * [`setUserData(...)`](#setuserdata)
 * [`removeUserData(...)`](#removeuserdata)
+* [`reportError(...)`](#reporterror)
 * [`beginCall(...)`](#begincall)
 * [`endCall(...)`](#endcall)
 * [`beginHttpRequest(...)`](#beginhttprequest)
@@ -61,6 +62,7 @@ apply plugin: 'adeum'
 * [`getVersion()`](#getversion)
 * [`clear()`](#clear)
 * [Interfaces](#interfaces)
+* [Enums](#enums)
 
 </docgen-index>
 
@@ -156,6 +158,19 @@ removeUserData(options: { key: string; }) => Promise<void>
 | Param         | Type                          |
 | ------------- | ----------------------------- |
 | **`options`** | <code>{ key: string; }</code> |
+
+--------------------
+
+
+### reportError(...)
+
+```typescript
+reportError(options: { error: string; errorDomain: string; errorCode: bigint; errorStack: boolean; errorSeverity: errorSeverityLevel; }) => Promise<void>
+```
+
+| Param         | Type                                                                                                                                                              |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code>{ error: string; errorDomain: string; errorCode: bigint; errorStack: boolean; errorSeverity: <a href="#errorseveritylevel">errorSeverityLevel</a>; }</code> |
 
 --------------------
 
@@ -445,5 +460,17 @@ clear() => Promise<void>
 | **get**     | (key: K) =&gt; V \| undefined                                                                                  |
 | **has**     | (key: K) =&gt; boolean                                                                                         |
 | **set**     | (key: K, value: V) =&gt; this                                                                                  |
+
+
+### Enums
+
+
+#### errorSeverityLevel
+
+| Members                  | Value          |
+| ------------------------ | -------------- |
+| **`errorLevelInfo`**     | <code>0</code> |
+| **`errorLevelWarn`**     |                |
+| **`errorLevelCritical`** |                |
 
 </docgen-api>

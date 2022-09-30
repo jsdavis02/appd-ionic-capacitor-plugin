@@ -68,7 +68,13 @@ public class ADEUMMobileCapacitorPluginPlugin: CAPPlugin {
     }
     @objc func reportError(_ call: CAPPluginCall){
         let severity = call.getInt("errorSeverity", 0)
-        let sev_level = ADEumErrorSeverityLevel(rawValue: UInt(severity))
+        let sev_level = ADEumErrorSeverityLevel(rawValue: UInt(severity))!
+        let error_domain = call.getString("errorDomain")!
+        let error_code  = call.getInt("errorCode")!
+        let error_stack = call.getBool("errorStack")!
+        let error_message = call.getString("error")!
+        implementation.reportError(error: error_message, severity: sev_level, withStack: error_stack, errorCode: error_code, errorDomain: error_domain)
+        call.resolve()
     }
     @objc func beginCall(_ call: CAPPluginCall) {
         let className = call.getString("className") ?? nil
