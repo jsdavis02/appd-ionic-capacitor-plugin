@@ -95,6 +95,14 @@ public class ADEUMMobileCapacitorPluginPlugin extends Plugin {
     }
 
     @PluginMethod
+    public void reportError(PluginCall call){
+        String error_message = call.getString("error");
+        int severity_level = call.getInt("errorSeverity");
+        implementation.reportError(error_message, severity_level);
+        call.resolve();
+    }
+
+    @PluginMethod
     public void beginCall(PluginCall call){
         String className = call.getString("className");
         String methodName = call.getString("methodName");

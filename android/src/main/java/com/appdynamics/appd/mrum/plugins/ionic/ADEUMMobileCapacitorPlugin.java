@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.net.URL;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 
 public class ADEUMMobileCapacitorPlugin {
@@ -90,6 +91,10 @@ public class ADEUMMobileCapacitorPlugin {
 
     public void takeScreenshot() {
         com.appdynamics.eumagent.runtime.Instrumentation.takeScreenshot();
+    }
+
+    public void reportError(String error, int severity_level){
+        com.appdynamics.eumagent.runtime.Instrumentation.reportError(new Exception(error), severity_level);
     }
 
     public String beginCall(String className, String methodName, JSArray args) {
