@@ -1,7 +1,28 @@
 import { WebPlugin } from '@capacitor/core';
 import { v4 as uuid } from 'uuid';
 
-import type { ADEUMMobileCapacitorPluginPlugin, errorSeverityLevel } from './definitions';
+import type {
+  ADEUMMobileCapacitorPluginPlugin,
+  BeginCallOptions,
+  BeginHttpRequestOptions,
+  EchoOptions,
+  EndCallOptions,
+  EndSessionFrameOptions,
+  HttpTrackerContentLengthOptions,
+  HttpTrackerErrorMessageOptions,
+  HttpTrackerHeaderOptions,
+  HttpTrackerInstrumentationSourceOptions,
+  HttpTrackerResponseCodeOptions,
+  LeaveBreadcrumbOptions,
+  RemoveUserDataOptions,
+  ReportDoneOptions,
+  ReportErrorOptions,
+  ReportMetricWithNameOptions,
+  SetUserDataOptions,
+  StartSessionFrameOptions,
+  StartTimerOptions,
+  UpdateSessionFrameOptions,
+} from './definitions';
 
 export class ADEUMMobileCapacitorPluginWeb
   extends WebPlugin
@@ -9,112 +30,102 @@ export class ADEUMMobileCapacitorPluginWeb
   constructor() {
     super();
   }
-  async echo(options: { value: string }): Promise<{ value: string }> {
+  async echo(options: EchoOptions): Promise<EchoOptions> {
     console.log('ECHO', options);
     return options;
   }
 
-  async startTimer(options: { name: string }): Promise<void> {
+  async startTimer(options: StartTimerOptions): Promise<void> {
     console.log('startTimer', options);
     return;
   }
-  async stopTimer(options: { name: string }): Promise<void> {
+  async stopTimer(options: StartTimerOptions): Promise<void> {
     console.log('stopTimer', options);
     return;
   }
-  async reportMetricWithName(options: {
-    name: string;
-    value: number;
-  }): Promise<void> {
+  async reportMetricWithName(
+    options: ReportMetricWithNameOptions,
+  ): Promise<void> {
     console.log('reportMetricWithName', options);
     return;
   }
-  async leaveBreadcrumb(options: { name: string }): Promise<void> {
+  async leaveBreadcrumb(options: LeaveBreadcrumbOptions): Promise<void> {
     console.log('leaveBreadcrumb', options);
     return;
   }
-  async setUserData(options: { key: string; value: string }): Promise<void> {
+  async setUserData(options: SetUserDataOptions): Promise<void> {
     console.log('setUserData', options);
     return;
   }
-  async removeUserData(options: { key: string }): Promise<void> {
+  async removeUserData(options: RemoveUserDataOptions): Promise<void> {
     console.log('removeUserData', options);
     return;
   }
 
-  async reportError(options: { error: string; errorDomain: string; errorCode: bigint; errorStack: boolean; errorSeverity: errorSeverityLevel; }): Promise<void> {
-      console.log('reportError', options);
-      return;
+  async reportError(options: ReportErrorOptions): Promise<void> {
+    console.log('reportError', options);
+    return;
   }
 
-  async beginCall(options: {
-    className: string;
-    methodName: string;
-    withArguments: [];
-  }): Promise<{ call_tracker: string }> {
+  async beginCall(
+    options: BeginCallOptions,
+  ): Promise<{ call_tracker: string }> {
     console.log('beginCall', options);
     return { call_tracker: uuid() };
   }
-  async endCall(options: { call_tracker: string }): Promise<void> {
+  async endCall(options: EndCallOptions): Promise<void> {
     console.log('endCall', options);
     return;
   }
-  async beginHttpRequest(options: {
-    url: string;
-  }): Promise<{ http_tracker: string }> {
+  async beginHttpRequest(
+    options: BeginHttpRequestOptions,
+  ): Promise<{ http_tracker: string }> {
     console.log('beginHttpRequest', options);
     return { http_tracker: uuid() };
   }
-  async reportDone(options: { http_tracker: string }): Promise<void> {
+  async reportDone(options: ReportDoneOptions): Promise<void> {
     console.log('reportDone', options);
     return;
   }
-  async withResponseCode(options: {
-    http_tracker: string;
-    status_code: string;
-  }): Promise<void> {
+  async withResponseCode(
+    options: HttpTrackerResponseCodeOptions,
+  ): Promise<void> {
     console.log('withResponseCode', options);
     return;
   }
-  async withResponseContentLength(options: {
-    http_tracker: string;
-    content_length: number;
-  }): Promise<void> {
+  async withResponseContentLength(
+    options: HttpTrackerContentLengthOptions,
+  ): Promise<void> {
     console.log('withResponseContentLength', options);
     return;
   }
-  async withRequestContentLength(options: {
-    http_tracker: string;
-    content_length: number;
-  }): Promise<void> {
+  async withRequestContentLength(
+    options: HttpTrackerContentLengthOptions,
+  ): Promise<void> {
     console.log('withRequestContentLength', options);
     return;
   }
-  async withResponseHeaderFields(options: {
-    http_tracker: string;
-    http_headers: Map<string, string>;
-  }): Promise<void> {
+  async withResponseHeaderFields(
+    options: HttpTrackerHeaderOptions,
+  ): Promise<void> {
     console.log('withResponseHeaderFields', options);
     return;
   }
-  async withRequestHeaderFields(options: {
-    http_tracker: string;
-    http_headers: Map<string, string>;
-  }): Promise<void> {
+  async withRequestHeaderFields(
+    options: HttpTrackerHeaderOptions,
+  ): Promise<void> {
     console.log('withRequestHeaderFields', options);
     return;
   }
-  async withInstrumentationSource(options: {
-    http_tracker: string;
-    information_source: string;
-  }): Promise<void> {
+  async withInstrumentationSource(
+    options: HttpTrackerInstrumentationSourceOptions,
+  ): Promise<void> {
     console.log('withInstrumentationSource', options);
     return;
   }
-  async withErrorMessage(options: {
-    http_tracker: string;
-    error_message: string;
-  }): Promise<void> {
+  async withErrorMessage(
+    options: HttpTrackerErrorMessageOptions,
+  ): Promise<void> {
     console.log('withErrorMessage', options);
     return;
   }
@@ -142,21 +153,20 @@ export class ADEUMMobileCapacitorPluginWeb
     console.log('takeScreenshot');
     return;
   }
-  async startSessionFrame(options: {
-    session_frame_name: string;
-  }): Promise<{ session_frame: string }> {
+  async startSessionFrame(
+    options: StartSessionFrameOptions,
+  ): Promise<{ session_frame: string }> {
     console.log('should be running');
     console.log('startSessionFrame', options);
     return { session_frame: uuid() };
   }
-  async endSessionFrame(options: { session_frame: string }): Promise<void> {
+  async endSessionFrame(options: EndSessionFrameOptions): Promise<void> {
     console.log('endSessionFrame', options);
     return;
   }
-  async updateSessionFrameName(options: {
-    session_frame_name: string;
-    session_frame: string;
-  }): Promise<{ session_frame: string }> {
+  async updateSessionFrameName(
+    options: UpdateSessionFrameOptions,
+  ): Promise<{ session_frame: string }> {
     console.log('updateSessionFrameName', options);
     return { session_frame: options.session_frame };
   }
