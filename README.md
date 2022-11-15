@@ -72,14 +72,14 @@ apply plugin: 'adeum'
 ### echo(...)
 
 ```typescript
-echo(options: { value: string; }) => Promise<{ value: string; }>
+echo(options: EchoOptions) => Promise<EchoOptions>
 ```
 
-| Param         | Type                            |
-| ------------- | ------------------------------- |
-| **`options`** | <code>{ value: string; }</code> |
+| Param         | Type                                                |
+| ------------- | --------------------------------------------------- |
+| **`options`** | <code><a href="#echooptions">EchoOptions</a></code> |
 
-**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+**Returns:** <code>Promise&lt;<a href="#echooptions">EchoOptions</a>&gt;</code>
 
 --------------------
 
@@ -87,12 +87,12 @@ echo(options: { value: string; }) => Promise<{ value: string; }>
 ### startTimer(...)
 
 ```typescript
-startTimer(options: { name: string; }) => Promise<void>
+startTimer(options: StartTimerOptions) => Promise<void>
 ```
 
-| Param         | Type                           |
-| ------------- | ------------------------------ |
-| **`options`** | <code>{ name: string; }</code> |
+| Param         | Type                                                            |
+| ------------- | --------------------------------------------------------------- |
+| **`options`** | <code><a href="#starttimeroptions">StartTimerOptions</a></code> |
 
 --------------------
 
@@ -100,12 +100,12 @@ startTimer(options: { name: string; }) => Promise<void>
 ### stopTimer(...)
 
 ```typescript
-stopTimer(options: { name: string; }) => Promise<void>
+stopTimer(options: StopTimerOptions) => Promise<void>
 ```
 
-| Param         | Type                           |
-| ------------- | ------------------------------ |
-| **`options`** | <code>{ name: string; }</code> |
+| Param         | Type                                                          |
+| ------------- | ------------------------------------------------------------- |
+| **`options`** | <code><a href="#stoptimeroptions">StopTimerOptions</a></code> |
 
 --------------------
 
@@ -113,12 +113,12 @@ stopTimer(options: { name: string; }) => Promise<void>
 ### reportMetricWithName(...)
 
 ```typescript
-reportMetricWithName(options: { name: string; value: number; }) => Promise<void>
+reportMetricWithName(options: ReportMetricWithNameOptions) => Promise<void>
 ```
 
-| Param         | Type                                          |
-| ------------- | --------------------------------------------- |
-| **`options`** | <code>{ name: string; value: number; }</code> |
+| Param         | Type                                                                                |
+| ------------- | ----------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#reportmetricwithnameoptions">ReportMetricWithNameOptions</a></code> |
 
 --------------------
 
@@ -126,12 +126,12 @@ reportMetricWithName(options: { name: string; value: number; }) => Promise<void>
 ### leaveBreadcrumb(...)
 
 ```typescript
-leaveBreadcrumb(options: { name: string; }) => Promise<void>
+leaveBreadcrumb(options: LeaveBreadcrumbOptions) => Promise<void>
 ```
 
-| Param         | Type                           |
-| ------------- | ------------------------------ |
-| **`options`** | <code>{ name: string; }</code> |
+| Param         | Type                                                                      |
+| ------------- | ------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#leavebreadcrumboptions">LeaveBreadcrumbOptions</a></code> |
 
 --------------------
 
@@ -139,12 +139,12 @@ leaveBreadcrumb(options: { name: string; }) => Promise<void>
 ### setUserData(...)
 
 ```typescript
-setUserData(options: { key: string; value: string; }) => Promise<void>
+setUserData(options: SetUserDataOptions) => Promise<void>
 ```
 
-| Param         | Type                                         |
-| ------------- | -------------------------------------------- |
-| **`options`** | <code>{ key: string; value: string; }</code> |
+| Param         | Type                                                              |
+| ------------- | ----------------------------------------------------------------- |
+| **`options`** | <code><a href="#setuserdataoptions">SetUserDataOptions</a></code> |
 
 --------------------
 
@@ -152,12 +152,12 @@ setUserData(options: { key: string; value: string; }) => Promise<void>
 ### removeUserData(...)
 
 ```typescript
-removeUserData(options: { key: string; }) => Promise<void>
+removeUserData(options: RemoveUserDataOptions) => Promise<void>
 ```
 
-| Param         | Type                          |
-| ------------- | ----------------------------- |
-| **`options`** | <code>{ key: string; }</code> |
+| Param         | Type                                                                    |
+| ------------- | ----------------------------------------------------------------------- |
+| **`options`** | <code><a href="#removeuserdataoptions">RemoveUserDataOptions</a></code> |
 
 --------------------
 
@@ -165,12 +165,12 @@ removeUserData(options: { key: string; }) => Promise<void>
 ### reportError(...)
 
 ```typescript
-reportError(options: { error: string; errorDomain: string; errorCode: bigint; errorStack: boolean; errorSeverity: errorSeverityLevel; }) => Promise<void>
+reportError(options: ReportErrorOptions) => Promise<void>
 ```
 
-| Param         | Type                                                                                                                                                              |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ error: string; errorDomain: string; errorCode: bigint; errorStack: boolean; errorSeverity: <a href="#errorseveritylevel">errorSeverityLevel</a>; }</code> |
+| Param         | Type                                                              |
+| ------------- | ----------------------------------------------------------------- |
+| **`options`** | <code><a href="#reporterroroptions">ReportErrorOptions</a></code> |
 
 --------------------
 
@@ -178,14 +178,14 @@ reportError(options: { error: string; errorDomain: string; errorCode: bigint; er
 ### beginCall(...)
 
 ```typescript
-beginCall(options: { className: string; methodName: string; withArguments: []; }) => Promise<{ call_tracker: string; }>
+beginCall(options: BeginCallOptions) => Promise<EndCallOptions>
 ```
 
-| Param         | Type                                                                       |
-| ------------- | -------------------------------------------------------------------------- |
-| **`options`** | <code>{ className: string; methodName: string; withArguments: []; }</code> |
+| Param         | Type                                                          |
+| ------------- | ------------------------------------------------------------- |
+| **`options`** | <code><a href="#begincalloptions">BeginCallOptions</a></code> |
 
-**Returns:** <code>Promise&lt;{ call_tracker: string; }&gt;</code>
+**Returns:** <code>Promise&lt;<a href="#endcalloptions">EndCallOptions</a>&gt;</code>
 
 --------------------
 
@@ -193,12 +193,12 @@ beginCall(options: { className: string; methodName: string; withArguments: []; }
 ### endCall(...)
 
 ```typescript
-endCall(options: { call_tracker: string; }) => Promise<void>
+endCall(options: EndCallOptions) => Promise<void>
 ```
 
-| Param         | Type                                   |
-| ------------- | -------------------------------------- |
-| **`options`** | <code>{ call_tracker: string; }</code> |
+| Param         | Type                                                      |
+| ------------- | --------------------------------------------------------- |
+| **`options`** | <code><a href="#endcalloptions">EndCallOptions</a></code> |
 
 --------------------
 
@@ -206,12 +206,12 @@ endCall(options: { call_tracker: string; }) => Promise<void>
 ### beginHttpRequest(...)
 
 ```typescript
-beginHttpRequest(options: { url: string; }) => Promise<{ http_tracker: string; }>
+beginHttpRequest(options: BeginHttpRequestOptions) => Promise<{ http_tracker: string; }>
 ```
 
-| Param         | Type                          |
-| ------------- | ----------------------------- |
-| **`options`** | <code>{ url: string; }</code> |
+| Param         | Type                                                                        |
+| ------------- | --------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#beginhttprequestoptions">BeginHttpRequestOptions</a></code> |
 
 **Returns:** <code>Promise&lt;{ http_tracker: string; }&gt;</code>
 
@@ -221,12 +221,12 @@ beginHttpRequest(options: { url: string; }) => Promise<{ http_tracker: string; }
 ### reportDone(...)
 
 ```typescript
-reportDone(options: { http_tracker: string; }) => Promise<void>
+reportDone(options: ReportDoneOptions) => Promise<void>
 ```
 
-| Param         | Type                                   |
-| ------------- | -------------------------------------- |
-| **`options`** | <code>{ http_tracker: string; }</code> |
+| Param         | Type                                                            |
+| ------------- | --------------------------------------------------------------- |
+| **`options`** | <code><a href="#reportdoneoptions">ReportDoneOptions</a></code> |
 
 --------------------
 
@@ -234,12 +234,12 @@ reportDone(options: { http_tracker: string; }) => Promise<void>
 ### withResponseCode(...)
 
 ```typescript
-withResponseCode(options: { http_tracker: string; status_code: string; }) => Promise<void>
+withResponseCode(options: HttpTrackerResponseCodeOptions) => Promise<void>
 ```
 
-| Param         | Type                                                        |
-| ------------- | ----------------------------------------------------------- |
-| **`options`** | <code>{ http_tracker: string; status_code: string; }</code> |
+| Param         | Type                                                                                      |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#httptrackerresponsecodeoptions">HttpTrackerResponseCodeOptions</a></code> |
 
 --------------------
 
@@ -247,12 +247,12 @@ withResponseCode(options: { http_tracker: string; status_code: string; }) => Pro
 ### withResponseContentLength(...)
 
 ```typescript
-withResponseContentLength(options: { http_tracker: string; content_length: number; }) => Promise<void>
+withResponseContentLength(options: HttpTrackerContentLengthOptions) => Promise<void>
 ```
 
-| Param         | Type                                                           |
-| ------------- | -------------------------------------------------------------- |
-| **`options`** | <code>{ http_tracker: string; content_length: number; }</code> |
+| Param         | Type                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#httptrackercontentlengthoptions">HttpTrackerContentLengthOptions</a></code> |
 
 --------------------
 
@@ -260,12 +260,12 @@ withResponseContentLength(options: { http_tracker: string; content_length: numbe
 ### withRequestContentLength(...)
 
 ```typescript
-withRequestContentLength(options: { http_tracker: string; content_length: number; }) => Promise<void>
+withRequestContentLength(options: HttpTrackerContentLengthOptions) => Promise<void>
 ```
 
-| Param         | Type                                                           |
-| ------------- | -------------------------------------------------------------- |
-| **`options`** | <code>{ http_tracker: string; content_length: number; }</code> |
+| Param         | Type                                                                                        |
+| ------------- | ------------------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#httptrackercontentlengthoptions">HttpTrackerContentLengthOptions</a></code> |
 
 --------------------
 
@@ -273,12 +273,12 @@ withRequestContentLength(options: { http_tracker: string; content_length: number
 ### withResponseHeaderFields(...)
 
 ```typescript
-withResponseHeaderFields(options: { http_tracker: string; http_headers: Map<string, string>; }) => Promise<void>
+withResponseHeaderFields(options: HttpTrackerHeaderOptions) => Promise<void>
 ```
 
-| Param         | Type                                                                                               |
-| ------------- | -------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ http_tracker: string; http_headers: <a href="#map">Map</a>&lt;string, string&gt;; }</code> |
+| Param         | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#httptrackerheaderoptions">HttpTrackerHeaderOptions</a></code> |
 
 --------------------
 
@@ -286,12 +286,12 @@ withResponseHeaderFields(options: { http_tracker: string; http_headers: Map<stri
 ### withRequestHeaderFields(...)
 
 ```typescript
-withRequestHeaderFields(options: { http_tracker: string; http_headers: Map<string, string>; }) => Promise<void>
+withRequestHeaderFields(options: HttpTrackerHeaderOptions) => Promise<void>
 ```
 
-| Param         | Type                                                                                               |
-| ------------- | -------------------------------------------------------------------------------------------------- |
-| **`options`** | <code>{ http_tracker: string; http_headers: <a href="#map">Map</a>&lt;string, string&gt;; }</code> |
+| Param         | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#httptrackerheaderoptions">HttpTrackerHeaderOptions</a></code> |
 
 --------------------
 
@@ -299,12 +299,12 @@ withRequestHeaderFields(options: { http_tracker: string; http_headers: Map<strin
 ### withInstrumentationSource(...)
 
 ```typescript
-withInstrumentationSource(options: { http_tracker: string; information_source: string; }) => Promise<void>
+withInstrumentationSource(options: HttpTrackerInstrumentationSourceOptions) => Promise<void>
 ```
 
-| Param         | Type                                                               |
-| ------------- | ------------------------------------------------------------------ |
-| **`options`** | <code>{ http_tracker: string; information_source: string; }</code> |
+| Param         | Type                                                                                                        |
+| ------------- | ----------------------------------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#httptrackerinstrumentationsourceoptions">HttpTrackerInstrumentationSourceOptions</a></code> |
 
 --------------------
 
@@ -312,12 +312,12 @@ withInstrumentationSource(options: { http_tracker: string; information_source: s
 ### withErrorMessage(...)
 
 ```typescript
-withErrorMessage(options: { http_tracker: string; error_message: string; }) => Promise<void>
+withErrorMessage(options: HttpTrackerErrorMessageOptions) => Promise<void>
 ```
 
-| Param         | Type                                                          |
-| ------------- | ------------------------------------------------------------- |
-| **`options`** | <code>{ http_tracker: string; error_message: string; }</code> |
+| Param         | Type                                                                                      |
+| ------------- | ----------------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#httptrackererrormessageoptions">HttpTrackerErrorMessageOptions</a></code> |
 
 --------------------
 
@@ -383,12 +383,12 @@ takeScreenshot() => Promise<void>
 ### startSessionFrame(...)
 
 ```typescript
-startSessionFrame(options: { session_frame_name: string; }) => Promise<{ session_frame: string; }>
+startSessionFrame(options: StartSessionFrameOptions) => Promise<{ session_frame: string; }>
 ```
 
-| Param         | Type                                         |
-| ------------- | -------------------------------------------- |
-| **`options`** | <code>{ session_frame_name: string; }</code> |
+| Param         | Type                                                                          |
+| ------------- | ----------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#startsessionframeoptions">StartSessionFrameOptions</a></code> |
 
 **Returns:** <code>Promise&lt;{ session_frame: string; }&gt;</code>
 
@@ -398,12 +398,12 @@ startSessionFrame(options: { session_frame_name: string; }) => Promise<{ session
 ### endSessionFrame(...)
 
 ```typescript
-endSessionFrame(options: { session_frame: string; }) => Promise<void>
+endSessionFrame(options: EndSessionFrameOptions) => Promise<void>
 ```
 
-| Param         | Type                                    |
-| ------------- | --------------------------------------- |
-| **`options`** | <code>{ session_frame: string; }</code> |
+| Param         | Type                                                                      |
+| ------------- | ------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#endsessionframeoptions">EndSessionFrameOptions</a></code> |
 
 --------------------
 
@@ -411,12 +411,12 @@ endSessionFrame(options: { session_frame: string; }) => Promise<void>
 ### updateSessionFrameName(...)
 
 ```typescript
-updateSessionFrameName(options: { session_frame_name: string; session_frame: string; }) => Promise<{ session_frame: string; }>
+updateSessionFrameName(options: UpdateSessionFrameOptions) => Promise<{ session_frame: string; }>
 ```
 
-| Param         | Type                                                                |
-| ------------- | ------------------------------------------------------------------- |
-| **`options`** | <code>{ session_frame_name: string; session_frame: string; }</code> |
+| Param         | Type                                                                            |
+| ------------- | ------------------------------------------------------------------------------- |
+| **`options`** | <code><a href="#updatesessionframeoptions">UpdateSessionFrameOptions</a></code> |
 
 **Returns:** <code>Promise&lt;{ session_frame: string; }&gt;</code>
 
@@ -446,6 +446,122 @@ clear() => Promise<void>
 ### Interfaces
 
 
+#### EchoOptions
+
+| Prop        | Type                |
+| ----------- | ------------------- |
+| **`value`** | <code>string</code> |
+
+
+#### StartTimerOptions
+
+| Prop       | Type                |
+| ---------- | ------------------- |
+| **`name`** | <code>string</code> |
+
+
+#### StopTimerOptions
+
+| Prop       | Type                |
+| ---------- | ------------------- |
+| **`name`** | <code>string</code> |
+
+
+#### ReportMetricWithNameOptions
+
+| Prop        | Type                |
+| ----------- | ------------------- |
+| **`name`**  | <code>string</code> |
+| **`value`** | <code>number</code> |
+
+
+#### LeaveBreadcrumbOptions
+
+| Prop       | Type                |
+| ---------- | ------------------- |
+| **`name`** | <code>string</code> |
+
+
+#### SetUserDataOptions
+
+| Prop        | Type                |
+| ----------- | ------------------- |
+| **`key`**   | <code>string</code> |
+| **`value`** | <code>string</code> |
+
+
+#### RemoveUserDataOptions
+
+| Prop      | Type                |
+| --------- | ------------------- |
+| **`key`** | <code>string</code> |
+
+
+#### ReportErrorOptions
+
+| Prop                | Type                                                              |
+| ------------------- | ----------------------------------------------------------------- |
+| **`error`**         | <code>string</code>                                               |
+| **`errorDomain`**   | <code>string</code>                                               |
+| **`errorCode`**     | <code>number</code>                                               |
+| **`errorStack`**    | <code>boolean</code>                                              |
+| **`errorSeverity`** | <code><a href="#errorseveritylevel">ErrorSeverityLevel</a></code> |
+
+
+#### EndCallOptions
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`call_tracker`** | <code>string</code> |
+
+
+#### BeginCallOptions
+
+| Prop                | Type                |
+| ------------------- | ------------------- |
+| **`className`**     | <code>string</code> |
+| **`methodName`**    | <code>string</code> |
+| **`withArguments`** | <code>[]</code>     |
+
+
+#### BeginHttpRequestOptions
+
+| Prop      | Type                |
+| --------- | ------------------- |
+| **`url`** | <code>string</code> |
+
+
+#### ReportDoneOptions
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`http_tracker`** | <code>string</code> |
+
+
+#### HttpTrackerResponseCodeOptions
+
+| Prop               | Type                |
+| ------------------ | ------------------- |
+| **`http_tracker`** | <code>string</code> |
+| **`status_code`**  | <code>string</code> |
+
+
+#### HttpTrackerContentLengthOptions
+
+| Prop                 | Type                |
+| -------------------- | ------------------- |
+| **`http_tracker`**   | <code>string</code> |
+| **`content_length`** | <code>number</code> |
+
+
+#### HttpTrackerHeaderOptions
+
+| Prop               | Type                                                      |
+| ------------------ | --------------------------------------------------------- |
+| **`http_tracker`** | <code>string</code>                                       |
+| **`http_headers`** | <code><a href="#map">Map</a>&lt;string, string&gt;</code> |
+
+
 #### Map
 
 | Prop       | Type                |
@@ -462,10 +578,48 @@ clear() => Promise<void>
 | **set**     | (key: K, value: V) =&gt; this                                                                                  |
 
 
+#### HttpTrackerInstrumentationSourceOptions
+
+| Prop                     | Type                |
+| ------------------------ | ------------------- |
+| **`http_tracker`**       | <code>string</code> |
+| **`information_source`** | <code>string</code> |
+
+
+#### HttpTrackerErrorMessageOptions
+
+| Prop                | Type                |
+| ------------------- | ------------------- |
+| **`http_tracker`**  | <code>string</code> |
+| **`error_message`** | <code>string</code> |
+
+
+#### StartSessionFrameOptions
+
+| Prop                     | Type                |
+| ------------------------ | ------------------- |
+| **`session_frame_name`** | <code>string</code> |
+
+
+#### EndSessionFrameOptions
+
+| Prop                | Type                |
+| ------------------- | ------------------- |
+| **`session_frame`** | <code>string</code> |
+
+
+#### UpdateSessionFrameOptions
+
+| Prop                     | Type                |
+| ------------------------ | ------------------- |
+| **`session_frame_name`** | <code>string</code> |
+| **`session_frame`**      | <code>string</code> |
+
+
 ### Enums
 
 
-#### errorSeverityLevel
+#### ErrorSeverityLevel
 
 | Members                  | Value          |
 | ------------------------ | -------------- |
