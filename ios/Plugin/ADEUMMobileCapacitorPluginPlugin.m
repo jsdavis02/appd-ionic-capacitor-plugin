@@ -16,6 +16,7 @@ CAP_PLUGIN(ADEUMMobileCapacitorPluginPlugin, "ADEUMMobileCapacitorPlugin",
            CAP_PLUGIN_METHOD(leaveBreadcrumb, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(setUserData, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(removeUserData, CAPPluginReturnNone);
+           CAP_PLUGIN_METHOD(reportError, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(takeScreenshot, CAPPluginReturnNone);
            CAP_PLUGIN_METHOD(beginCall, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(endCall, CAPPluginReturnNone);
