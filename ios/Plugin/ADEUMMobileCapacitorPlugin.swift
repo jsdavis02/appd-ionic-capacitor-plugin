@@ -41,9 +41,9 @@ import Capacitor
         ADEumInstrumentation.takeScreenshot()
     }
     @objc public func reportError(error: String, severity: ADEumErrorSeverityLevel, withStack: Bool, errorCode: Int, errorDomain: String) -> Void {
-        
+        debugPrint(error as Any)
         let e = NSError(domain: errorDomain, code: errorCode, userInfo: [NSLocalizedDescriptionKey : error])
-        
+        debugPrint(e as Any)
         ADEumInstrumentation.reportError(e, withSeverity: severity, andStackTrace: withStack)
     }
     /*
