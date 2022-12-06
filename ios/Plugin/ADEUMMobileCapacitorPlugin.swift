@@ -28,7 +28,7 @@ import Capacitor
         ADEumInstrumentation.reportMetric(withName: name, value: value)
     }
     @objc public func leaveBreadcrumb(name: String?) -> Void {
-        debugPrint(name as Any)
+        //debugPrint(name as Any)
         ADEumInstrumentation.leaveBreadcrumb(name)
     }
     @objc public func setUserData(key: String, value: String) -> Void {
@@ -41,9 +41,9 @@ import Capacitor
         ADEumInstrumentation.takeScreenshot()
     }
     @objc public func reportError(error: String, severity: ADEumErrorSeverityLevel, withStack: Bool, errorCode: Int, errorDomain: String) -> Void {
-        debugPrint(error as Any)
+        //debugPrint(error as Any)
         let e = NSError(domain: errorDomain, code: errorCode, userInfo: [NSLocalizedDescriptionKey : error])
-        debugPrint(e as Any)
+        //debugPrint(e as Any)
         ADEumInstrumentation.reportError(e, withSeverity: severity, andStackTrace: withStack)
     }
     /*
